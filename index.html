@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explora Pokémon con la Pokédex, arma tu equipo y juega batallas locales u online con otros entrenadores.">
+    <meta name="theme-color" content="#f3f3ed">
+    <title>Pokédex y Batallas Pokémon | PokéArena</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a class="skip-link" href="#inicio">Saltar al contenido</a>
+    <header class="site-header">
+        <a class="site-brand" id="navHome" href="#inicio" aria-label="PokéArena, ir al inicio"><span class="brand-ball" aria-hidden="true"></span><span><strong>PokéArena</strong><small>Pokédex · Batallas</small></span></a>
+        <nav class="site-nav" aria-label="Navegación principal">
+            <button id="navApi" class="nav-link" type="button" aria-current="page"><span class="nav-link-icon" aria-hidden="true">⌕</span> Pokédex</button>
+            <a class="nav-link api-source" href="https://pokeapi.co/api/v2/pokemon/" target="_blank" rel="noopener noreferrer" aria-label="Abrir el endpoint oficial de Pokémon de PokéAPI">API <span aria-hidden="true">↗</span></a>
+            <button id="navBattle" class="game-launch" type="button" aria-current="false">Batallas <span aria-hidden="true">↗</span></button>
+        </nav>
+    </header>
+
+    <main class="pokedex-main" id="inicio">
+        <div class="workspace-layout">
+            <aside class="workspace-sidebar" aria-label="Atajos de navegación">
+                <p class="sidebar-caption">ESPACIO DE ENTRENADOR</p>
+                <button id="sidebarDex" class="sidebar-link is-active" type="button"><span aria-hidden="true">▦</span> Pokédex</button>
+                <button id="sidebarBattle" class="sidebar-link" type="button"><span aria-hidden="true">⚔</span> Centro de batalla</button>
+                <a class="sidebar-link" href="https://pokeapi.co/api/v2/pokemon/" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">↗</span> API REST oficial</a>
+                <div class="sidebar-divider"></div>
+                <div class="sidebar-tip"><span class="sidebar-tip-icon" aria-hidden="true">✦</span><strong>Tu próximo equipo</strong><small>Busca un Pokémon, revisa sus tipos y llévalo al combate.</small></div>
+                <div class="sidebar-footer"><span class="api-status-dot"></span> Datos conectados a PokéAPI</div>
+            </aside>
+
+            <div class="workspace-content">
+                <section class="workspace-intro" aria-labelledby="heroTitle">
+                    <div><p class="eyebrow">POKÉMON FIELD DESK <span class="intro-line"></span> 01 / 02</p><h1 id="heroTitle">Descubre. Prepara.<br><em>Entra en combate.</em></h1><p class="hero-subtitle">Tu Pokédex y tu arena de batalla, en un solo espacio.</p></div>
+                    <button id="btnAbrirJuego" class="game-launch" type="button">Empezar a Jugar <span aria-hidden="true">↗</span></button>
+                </section>
+
+                <div class="dashboard-grid">
+                    <section class="pokedex-panel" id="pokemonSearch" aria-labelledby="pokedexTitle">
+                        <div class="section-heading"><div><p class="eyebrow">01 — COMPENDIO</p><h2 id="pokedexTitle">Buscar Pokémon</h2><p>Escribe un nombre o número para abrir su ficha.</p></div><a class="dex-badge" href="https://pokeapi.co/api/v2/pokemon/" target="_blank" rel="noopener noreferrer"><span class="dex-dot"></span> API ACTIVA ↗</a></div>
+                        <div class="buscador">
+                            <div class="autocompletar">
+                                <label class="sr-only" for="busqueda">Nombre o número del Pokémon</label>
+                                <input type="search" id="busqueda" placeholder="Ej. Pikachu o 25" autocomplete="off" aria-controls="sugerencias" aria-autocomplete="list">
+                                <ul id="sugerencias" class="oculto"></ul>
+                            </div>
+                            <button id="btnBuscar"><span aria-hidden="true">⌕</span> Buscar</button>
+                            <button id="btnAleatorio" class="secundario"><span aria-hidden="true">⤨</span> Aleatorio</button>
+                        </div>
+                        <div id="mensaje" role="status" aria-live="polite"></div>
+
+                        <section id="tarjeta" class="tarjeta oculto" aria-live="polite">
+                            <div class="cabecera"><span id="numero"></span><h2 id="nombre"></h2></div>
+                            <img id="imagen" src="" alt="Imagen del Pokémon">
+                            <div id="tipos" class="tipos"></div>
+                            <p id="descripcion" class="descripcion"></p>
+                            <div class="relaciones-tipos"><div id="fortalezas" class="relacion"></div><div id="debilidades" class="relacion"></div><div id="neutros" class="relacion"></div></div>
+                            <div class="medidas"><div><span>Altura</span><strong id="altura"></strong></div><div><span>Peso</span><strong id="peso"></strong></div></div>
+                            <h3>Estadísticas base</h3><div id="estadisticas"></div>
+                            <div class="navegacion"><button id="btnAnterior" class="secundario">&larr; Anterior</button><button id="btnSiguiente" class="secundario">Siguiente &rarr;</button></div>
+                        </section>
+                        <section class="json-panel" aria-label="Datos técnicos"><button id="btnJson" class="secundario">Ver JSON de la respuesta</button><p id="urlPeticion" class="url"></p><pre id="json" class="oculto"></pre></section>
+                    </section>
+
+                    <aside class="arena-panel" aria-labelledby="arenaTitle">
+                        <div class="arena-heading"><div><p class="eyebrow">02 — ARENA</p><h2 id="arenaTitle">Elige tu partida</h2></div><span class="arena-spark" aria-hidden="true">✦</span></div>
+                        <p class="arena-description">Explora, reta a la CPU o encuentra entrenadores en tu red local.</p>
+                        <nav class="quick-paths" aria-label="Modos de juego">
+                            <button class="quick-path local-path" id="quickLocalBattle" type="button"><span class="quick-icon" aria-hidden="true">⚔</span><span><strong>Local vs. CPU</strong><small>Arma tu equipo y juega a tu ritmo.</small></span><span class="quick-arrow" aria-hidden="true">↗</span></button>
+                            <button class="quick-path online-path" id="quickOnlineBattle" type="button"><span class="quick-icon" aria-hidden="true">◎</span><span><strong>Online y en vivo</strong><small>Juega por Wi-Fi o mira otra batalla.</small></span><span class="quick-arrow" aria-hidden="true">↗</span></button>
+                        </nav>
+                        <div class="arena-footer"><span class="arena-pokeballs" aria-hidden="true"><i></i><i></i><i></i></span><span>Equipos de hasta <strong>6 Pokémon</strong></span></div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main id="juego" class="game-shell oculto">
+        <div class="audio-controls" aria-label="Opciones de audio">
+            <label><input id="toggleMusic" type="checkbox" checked> ♫ Música</label>
+            <label><input id="toggleSfx" type="checkbox" checked> 🔊 Efectos</label>
+        </div>
+        <section id="vistaMenu" class="game-card">
+            <div class="game-heading">
+                <div><p class="eyebrow">POKÉMON SHOWDOWN</p><h2>Centro de Batalla</h2><p>Arma tu equipo y reta a otros entrenadores.</p></div>
+                <button id="btnVolverPokedex" class="secundario">Volver a la Pokédex</button>
+            </div>
+            <div class="mode-grid">
+                <button id="btnModoCpu" class="mode-card"><span>⚔️</span><strong>Local vs. CPU</strong><small>Combate individual con equipos de hasta 6 Pokémon.</small></button>
+                <button id="btnModoOnline" class="mode-card"><span>🌐</span><strong>Online en Wi-Fi</strong><small>Crea salas, encuentra rivales y mira batallas en vivo.</small></button>
+            </div>
+            <p id="estadoServidor" class="connection-note">Para jugar online, inicia el servidor y entra al lobby.</p>
+        </section>
+
+        <section id="vistaOnline" class="game-card oculto">
+            <div class="game-heading"><div><p class="eyebrow">LOBBY LOCAL</p><h2>Batallas en Wi-Fi</h2></div><button class="secundario volver-menu">Menú del juego</button></div>
+            <label class="field-label" for="nombreEntrenador">Nombre de entrenador</label>
+            <div class="lobby-controls"><input id="nombreEntrenador" maxlength="24" placeholder="Ej. Ash"><button id="btnConectar">Entrar al lobby</button></div>
+            <div id="lobbyContenido" class="oculto">
+                <div class="lobby-actions"><button id="btnCrearSala">Crear nueva batalla</button><button id="btnUnirseSala" class="secundario">Unirse a sala disponible</button></div>
+                <h3>Batallas en Vivo</h3><div id="listaSalas" class="room-list"><p class="empty-state">Conéctate para ver las salas.</p></div>
+            </div>
+            <p id="onlineMensaje" class="status-line" role="status"></p>
+        </section>
+
+        <section id="vistaSala" class="game-card oculto">
+            <div class="game-heading"><div><p class="eyebrow" id="salaEtiqueta">SALA</p><h2 id="salaTitulo">Preparación</h2></div><button id="btnSalirSala" class="secundario">Salir de la sala</button></div>
+            <p id="estadoSala" class="status-line"></p>
+            <div id="equipoEditor" class="team-editor">
+                <div class="lobby-controls"><div class="team-search"><input id="pokemonEquipoInput" placeholder="Busca por nombre o número…" autocomplete="off" aria-label="Buscar Pokémon para el equipo" aria-controls="battlePokemonSuggestions" aria-autocomplete="list"><div id="battlePokemonSuggestions" class="battle-pokemon-suggestions oculto" role="listbox" aria-label="Pokémon encontrados"></div></div><button id="btnAgregarPokemon">Buscar y Agregar Pokémon</button><button id="btnEquipoRandom" class="secundario">Equipo Random</button></div>
+                <div id="equipoSeleccionado" class="team-list"></div>
+                <button id="btnListo" class="ready-button">Empezar Batalla</button>
+            </div>
+            <div id="infoEspectador" class="spectator-banner oculto">Modo Espectador — Viendo batalla en vivo <button id="btnDejarEspectador" class="secundario">Salir de la transmisión</button></div>
+        </section>
+
+        <section id="vistaBatalla" class="game-card battle-card oculto">
+            <div class="battle-top"><div><p class="eyebrow" id="battleRoomLabel">BATALLA</p><h2 id="battleTitle">Combate</h2></div><div id="spectatorWidget" class="spectator-widget">👁️ Espectadores (0)</div></div>
+            <div id="spectatorNames" class="spectator-names"></div>
+            <div class="battle-layout">
+              <div class="battlefield">
+                  <div class="fighter opponent-fighter"><div class="fighter-hud"><div><span class="trainer-name" id="enemyTrainer"></span><strong id="enemyName">—</strong><small class="pokeball-count" id="enemyBallCount" aria-label="Equipo rival"></small></div><div class="hp-track"><div class="hp-bar-fill" id="enemyHpBar"></div></div><small id="enemyHpText"></small></div><div id="enemySpriteWrapper" class="pokemon-sprite-wrapper"><img id="enemySprite" class="pokemon-sprite-img" alt="Pokémon rival"></div></div>
+                  <div class="platform platform-enemy"></div><div class="platform platform-player"></div>
+                  <div class="fighter player-fighter"><div id="playerSpriteWrapper" class="pokemon-sprite-wrapper"><img id="playerSprite" class="pokemon-sprite-img" alt="Tu Pokémon"></div><div class="fighter-hud"><div><span class="trainer-name" id="playerTrainer"></span><strong id="playerName">—</strong><small class="pokeball-count" id="playerBallCount" aria-label="Tu equipo"></small></div><div class="hp-track"><div class="hp-bar-fill" id="playerHpBar"></div></div><small id="playerHpText"></small></div></div>
+              </div>
+              <div class="battle-bottom"><div class="battle-dialog"><p id="battleNarration" aria-live="polite">¡Que comience el combate!</p></div><div id="battleActions" class="battle-actions"></div></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script src="battle.js"></script>
+</body>
+</html>
